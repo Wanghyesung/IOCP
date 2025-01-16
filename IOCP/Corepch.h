@@ -12,6 +12,9 @@
 #include <iostream>
 
 #include <assert.h>
+#include "define.h"
 
 #include <mutex>
 #include <atomic>
+
+using namespace std;

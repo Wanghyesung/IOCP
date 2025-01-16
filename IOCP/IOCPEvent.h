@@ -20,12 +20,12 @@ public:
 
 	eIocpEvent GetEvent() { return m_eEventType; }
 
-	void SetOwner(Session* _pOwner) { m_pOwner = _pOwner; }
-	Session* GetOwner() { return m_pOwner; }
+	void SetOwner(shared_ptr<Session> _pOwner) { m_pOwner = _pOwner; }
+	shared_ptr<Session> GetOwner() { return m_pOwner; }
 private:
 	eIocpEvent m_eEventType;
 
-	Session* m_pOwner;
+	shared_ptr<Session> m_pOwner;
 
 };
 
@@ -35,6 +35,9 @@ class IOCPSendEvent : public IOCPEvent
 public:
 	IOCPSendEvent();
 	~IOCPSendEvent();
+
+public:
+	BYTE m_sendBuffer[1024];
 };
 
 

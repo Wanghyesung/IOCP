@@ -14,7 +14,7 @@ IOCP::~IOCP()
 
 }
 
-void IOCP::RegisterEvent(Session* _pSession)
+void IOCP::RegisterEvent(shared_ptr<Session> _pSession)
 {
 	HANDLE handle = _pSession->GetHandle();
 	CreateIoCompletionPort(handle, m_IOCPHandle, 0, 0 );
@@ -27,12 +27,11 @@ void IOCP::Excute()
 	ULONG_PTR key = 0;
 	IOCPEvent* iocpEvnet = nullptr;
 	
-	DWORD milliseconds = 1;
 	
 	//지정된 I/O 완료 포트에서 I/O 완료 패킷을 큐에서 제거하려고 시도합니다. 없다면 생길때까지 대기 
-	if (GetQueuedCompletionStatus(m_IOCPHandle, &numOfBytes, &key, reinterpret_cast<LPOVERLAPPED*>(&iocpEvnet), milliseconds) != false)
+	if (GetQueuedCompletionStatus(m_IOCPHandle, &numOfBytes, &key, reinterpret_cast<LPOVERLAPPED*>(&iocpEvnet), INFINITE) != false)
 	{
-		Session* pSession = iocpEvnet->GetOwner();
+		shared_ptr<Session> pSession = iocpEvnet->GetOwner();
 		pSession->DisPatch(iocpEvnet, numOfBytes);
 	}
 	else

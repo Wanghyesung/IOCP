@@ -2,9 +2,12 @@
 //
 
 #include <iostream>
+#include <Service.h>
 
 int main()
 {
-    std::cout << "Hello World!\n";
+    ServerService* pService = new ServerService();
+
+
 }
 

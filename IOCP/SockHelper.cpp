@@ -91,11 +91,14 @@ bool SockHelper::Close(SOCKET& _socket )
 bool SockHelper::Clear()
 {
 	WSACleanup();
+
+
+	return true;
 }
 
 bool SockHelper::Bind(SOCKET _socket, NetAddress addr)
 {
-	return  bind(_socket, reinterpret_cast<SOCKADDR*>(&addr.GetAddr()), sizeof(SOCKADDR_IN)) != SOCKET_ERROR;
+	return  bind(_socket, reinterpret_cast<const SOCKADDR*>(&addr.GetAddr()), sizeof(SOCKADDR_IN)) != SOCKET_ERROR;
 }
 
 bool SockHelper::BindAny(SOCKET _socket, UINT _iPort)
@@ -105,7 +108,7 @@ bool SockHelper::BindAny(SOCKET _socket, UINT _iPort)
 	sockAddr.sin_port = htons(_iPort);
 	sockAddr.sin_addr.s_addr = htonl(INADDR_ANY);
 
-	return bind(_socket, reinterpret_cast<SOCKADDR*>(&sockAddr), sizeof(SOCKADDR_IN)) != SOCKET_ERROR;
+	return bind(_socket, reinterpret_cast<const SOCKADDR*>(&sockAddr), sizeof(SOCKADDR_IN)) != SOCKET_ERROR;
 }
 
 bool SockHelper::Listen(SOCKET _socket, int backlog)

@@ -8,7 +8,7 @@ public:
 	~IOCP();
 
 public:
-	void RegisterEvent(Session* _pSession);
+	void RegisterEvent(shared_ptr<Session> _pSession);
 	void Excute();
 
 private:

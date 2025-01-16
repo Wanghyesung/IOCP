@@ -37,11 +37,20 @@
     <ClInclude Include="IOCP.h">
       <Filter>소스 파일\NetWork</Filter>
     </ClInclude>
+    <ClInclude Include="IOCPEvent.h">
+      <Filter>소스 파일\NetWork</Filter>
+    </ClInclude>
+    <ClInclude Include="Session.h">
+      <Filter>소스 파일\NetWork</Filter>
+    </ClInclude>
+    <ClInclude Include="Listener.h">
+      <Filter>소스 파일\NetWork</Filter>
+    </ClInclude>
+    <ClInclude Include="define.h">
+      <Filter>소스 파일\Common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ICOP.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="pch.cpp">
       <Filter>소스 파일\Common</Filter>
     </ClCompile>
@@ -55,6 +64,15 @@
       <Filter>소스 파일\NetWork</Filter>
     </ClCompile>
     <ClCompile Include="IOCP.cpp">
+      <Filter>소스 파일\NetWork</Filter>
+    </ClCompile>
+    <ClCompile Include="IOCPEvent.cpp">
+      <Filter>소스 파일\NetWork</Filter>
+    </ClCompile>
+    <ClCompile Include="Session.cpp">
+      <Filter>소스 파일\NetWork</Filter>
+    </ClCompile>
+    <ClCompile Include="Listener.cpp">
       <Filter>소스 파일\NetWork</Filter>
     </ClCompile>
   </ItemGroup>

@@ -20,7 +20,7 @@ void Listener::Start(ServerService* _pService)
 {
 	m_socket = SockHelper::Create_Socket();
 	m_pService = _pService;
-
+	
 	//accept
 	m_pService->GetIOCP()->RegisterEvent(this);
 	
@@ -42,7 +42,7 @@ void Listener::Start(ServerService* _pService)
 	for (UINT i = 0; i < AcceptCount; ++i)
 	{
 		IOCPAcceptEvent* pAcceptEvent = new IOCPAcceptEvent();
-		pAcceptEvent->SetOwner(this);
+		//pAcceptEvent->SetOwner(this);
 
 		m_vecEvent.push_back(pAcceptEvent);
 		RegisterAccept(pAcceptEvent);
@@ -51,6 +51,7 @@ void Listener::Start(ServerService* _pService)
 
 void Listener::DisPatch(IOCPEvent* _pEvent, int _iNumOfBytes)
 {
+	//행당 event를 등록하고 사라지면 문제가 발생 -> shared로 바꾸기
 	IOCPAcceptEvent* pAccept = static_cast<IOCPAcceptEvent*>(_pEvent);
 	pAccept->GetOwner()->ProcessAccept(pAccept);
 	
@@ -58,10 +59,10 @@ void Listener::DisPatch(IOCPEvent* _pEvent, int _iNumOfBytes)
 
 void Listener::RegisterAccept(IOCPAcceptEvent* acceptEvent)
 {
-	
-	Session* pSession = m_pService->CreateSession();
 	//클라 소켓
-	m_pService->GetIOCP()->RegisterEvent(pSession);
+	Session* pSession = GetService()->CreateSession();
+	//IOCP 관찰 등록
+	GetService()->GetIOCP()->RegisterEvent(pSession);
 
 	acceptEvent->init();
 	acceptEvent->SetOwner(pSession);

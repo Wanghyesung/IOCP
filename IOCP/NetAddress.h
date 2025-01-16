@@ -7,7 +7,7 @@ public:
 	NetAddress(SOCKADDR_IN _addr);
 	~NetAddress();
 
-	SOCKADDR_IN GetAddr() { return m_sockAddr; }
+	SOCKADDR_IN& GetAddr() { return m_sockAddr; }
 	wstring			GetIpAddress();
 private:
 	SOCKADDR_IN m_sockAddr;

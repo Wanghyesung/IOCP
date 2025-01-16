@@ -7,7 +7,7 @@
 #include "Listener.h"
 
 
-Service::Service(eServiceType _eType, NetAddress _addr, IOCP* _pIOCP, UINT _iMaxSessionCount) :
+Service::Service(eServiceType _eType, NetAddress _addr, shared_ptr<IOCP> _pIOCP, UINT _iMaxSessionCount) :
 	m_etype(_eType),
 	m_Address(_addr),
 	m_pIOCP(_pIOCP),
@@ -21,10 +21,10 @@ Service::~Service()
 
 }
 
-Session* Service::CreateSession()
+shared_ptr<Session> Service::CreateSession()
 {
-	Session* pSession = new Session();
-	pSession->SetService(this);
+	shared_ptr<Session> pSession = make_shared<Session>();
+	pSession->SetService(shared_from_this());
 
 	//iocpµî·Ï
 	m_pIOCP->RegisterEvent(pSession);
@@ -34,7 +34,7 @@ Session* Service::CreateSession()
 
 
 
-ServerService::ServerService(NetAddress _addr, IOCP* _pIOCP, UINT _iMaxSessionCount):
+ServerService::ServerService(NetAddress _addr, shared_ptr<IOCP> _pIOCP, UINT _iMaxSessionCount):
 	Service(eServiceType::Server,_addr, _pIOCP,_iMaxSessionCount)
 {
 
@@ -59,7 +59,7 @@ void ServerService::Start()
 
 
 
-ClientService::ClientService(NetAddress _addr, IOCP* _pIOCP, UINT _iMaxSessionCount):
+ClientService::ClientService(NetAddress _addr, shared_ptr<IOCP> _pIOCP, UINT _iMaxSessionCount):
 	Service(eServiceType::Server, _addr, _pIOCP, _iMaxSessionCount)
 {
 
@@ -77,6 +77,11 @@ void ClientService::Start()
 		return;
 	}
 
-	Session* pSession = CreateSession();
-	//pSession->Conn
+	int iCount = GetMaxSessionCount();
+
+	for (int i = 0; i < iCount; ++i)
+	{
+		shared_ptr<Session> pSession = CreateSession();
+		pSession->Connect();
+	}
 }

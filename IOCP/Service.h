@@ -1,6 +1,7 @@
 #pragma once
 
-class NetAddress;
+#include "NetAddress.h"
+
 class IOCP;
 class Session;
 class Listener;
@@ -11,24 +12,24 @@ enum eServiceType
 	Server,
 
 };
-class Service
+class Service : enable_shared_from_this<Service>
 {
 public:
 	//Service(const wstring& _strAddr , UINT _iProt);
-	Service(eServiceType _eType, NetAddress _addr, IOCP* _pIOCP, UINT _iMaxSessionCount);
+	Service(eServiceType _eType, NetAddress _addr, shared_ptr<IOCP> _pIOCP, UINT _iMaxSessionCount);
 	~Service();
 
 	virtual void Start() =0;
 
-	Session* CreateSession();
+	shared_ptr<Session> CreateSession();
 
 	NetAddress GetAddress() { return m_Address; }
-	IOCP* GetIOCP() { return m_pIOCP; }
+	shared_ptr<IOCP> GetIOCP() { return m_pIOCP; }
 	UINT GetMaxSessionCount() { return m_iMaxSessionCount; }
 	eServiceType GetServiceType() { return m_etype; }
 
-	void AddSession(Session* _pSession) { m_setSession.insert(_pSession); }
-	void EraseSession(Session* _pSession) { m_setSession.erase(_pSession); }
+	void AddSession(shared_ptr<Session> _pSession) { m_setSession.insert(_pSession); }
+	void EraseSession(shared_ptr<Session> _pSession) { m_setSession.erase(_pSession); }
 
 
 	
@@ -37,8 +38,8 @@ public:
 
 private:
 	NetAddress m_Address;
-	IOCP* m_pIOCP;
-	set<Session*> m_setSession;
+	shared_ptr<IOCP> m_pIOCP;
+	set<shared_ptr<Session>> m_setSession;
 	eServiceType m_etype;
 	
 	UINT m_iMaxSessionCount;
@@ -50,7 +51,7 @@ private:
 class ServerService : public Service
 {
 public:
-	ServerService(NetAddress _addr, IOCP* _pIOCP, UINT _iMaxSessionCount);
+	ServerService(NetAddress _addr, shared_ptr<IOCP> _pIOCP, UINT _iMaxSessionCount);
 	~ServerService();
 
 
@@ -66,7 +67,7 @@ private:
 class ClientService : public Service
 {
 public:
-	ClientService(NetAddress _addr, IOCP* _pIOCP, UINT _iMaxSessionCount);
+	ClientService(NetAddress _addr, shared_ptr<IOCP> _pIOCP, UINT _iMaxSessionCount);
 	~ClientService();
 
 
