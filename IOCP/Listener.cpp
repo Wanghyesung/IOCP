@@ -16,33 +16,32 @@ Listener::~Listener()
 
 }
 
-void Listener::Start(ServerService* _pService)
+void Listener::Start()
 {
 	m_socket = SockHelper::Create_Socket();
-	m_pService = _pService;
 	
-	//accept
-	m_pService->GetIOCP()->RegisterEvent(this);
 	
-	if (SockHelper::SetTcpNoDelay(m_socket, true) == false)
+	GetService()->GetIOCP()->RegisterEvent(shared_from_this());
+	
+	if (SockHelper::SetReuseAddress(m_socket, true) == false)
 		assert(nullptr);
 
 	if (SockHelper::SetLinger(m_socket, 0, 0) == false)
 		assert(nullptr);
 	
-	if (SockHelper::Bind(m_socket, _pService->GetAddress()) == false)
+	if (SockHelper::Bind(m_socket, GetService()->GetAddress()) == false)
 		assert(nullptr);
 
 	if (SockHelper::Listen(m_socket, SOMAXCONN) == false)
 		assert(nullptr);
 	
 
-	UINT AcceptCount = _pService->GetMaxSessionCount();
+	UINT AcceptCount = GetService()->GetMaxSessionCount();
 
 	for (UINT i = 0; i < AcceptCount; ++i)
 	{
 		IOCPAcceptEvent* pAcceptEvent = new IOCPAcceptEvent();
-		//pAcceptEvent->SetOwner(this);
+		pAcceptEvent->SetOwner(shared_from_this()); //내 listensocket 등록
 
 		m_vecEvent.push_back(pAcceptEvent);
 		RegisterAccept(pAcceptEvent);
@@ -57,34 +56,32 @@ void Listener::DisPatch(IOCPEvent* _pEvent, int _iNumOfBytes)
 	
 }
 
-void Listener::RegisterAccept(IOCPAcceptEvent* acceptEvent)
+void Listener::RegisterAccept(IOCPAcceptEvent* _pAcceptEvent)
 {
 	//클라 소켓
-	Session* pSession = GetService()->CreateSession();
-	//IOCP 관찰 등록
-	GetService()->GetIOCP()->RegisterEvent(pSession);
-
-	acceptEvent->init();
-	acceptEvent->SetOwner(pSession);
+	shared_ptr<Session> pSession = GetService()->CreateSession(); //여기서 클라전용 세션으로
+	
+	_pAcceptEvent->init();
+	_pAcceptEvent->m_pSession = pSession; //내 클라소켓 등록
 
 
 	DWORD bytesRecved = 0;
 	
 	if (false == SockHelper::AcceptEx(m_socket, pSession->GetSocket(), pSession->m_RecvBuffer, 0,
-		sizeof(SOCKADDR_IN) + 16, sizeof(SOCKADDR_IN) + 16, &bytesRecved, reinterpret_cast<LPOVERLAPPED>(acceptEvent)))
+		sizeof(SOCKADDR_IN) + 16, sizeof(SOCKADDR_IN) + 16, &bytesRecved, reinterpret_cast<LPOVERLAPPED>(_pAcceptEvent)))
 	{
 		const int errorCode = WSAGetLastError();
 		if (errorCode != WSA_IO_PENDING)
 		{
 			//만약 실패하면 다시 accept
-			RegisterAccept(acceptEvent);
+			RegisterAccept(_pAcceptEvent);
 		}
 	}
 }
 
-void Listener::ProcessAccept(IOCPAcceptEvent* acceptEvent)
+void Listener::ProcessAccept(IOCPAcceptEvent* _pAcceptEvent)
 {
-	Session* session = acceptEvent->GetOwner();
+	shared_ptr<Session> session = _pAcceptEvent->m_pSession; //아까 만들어둔 클라소켓
 
 	//서버로
 	if (SockHelper::SetUpdateAcceptSocket(session->GetSocket(), m_socket) == false)
@@ -94,7 +91,7 @@ void Listener::ProcessAccept(IOCPAcceptEvent* acceptEvent)
 	int iAddrSize = sizeof(clientAddr);
 	if (getpeername(session->GetSocket(), reinterpret_cast<SOCKADDR*>(&clientAddr), &iAddrSize) == SOCKET_ERROR)
 	{
-		RegisterAccept(acceptEvent);
+		RegisterAccept(_pAcceptEvent);
 	}
 
 	session->SetAddress(NetAddress(clientAddr));
@@ -102,6 +99,6 @@ void Listener::ProcessAccept(IOCPAcceptEvent* acceptEvent)
 	//connected
 	session->ProcessConnect();
 	
-	RegisterAccept(acceptEvent);
+	RegisterAccept(_pAcceptEvent);
 
 }

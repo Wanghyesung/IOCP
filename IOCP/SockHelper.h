@@ -9,7 +9,7 @@ class SockHelper
 public:
 	static void init();
 
-	static bool BindWindowFunc(SOCKET _socket,  GUID WSAID, LPVOID _pFunc);
+	static bool BindWindowFunc(SOCKET _socket,  GUID WSAID, LPVOID* _pFunc);
 	
 public:
 	static LPFN_CONNECTEX ConnectEx;

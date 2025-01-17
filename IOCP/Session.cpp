@@ -150,7 +150,8 @@ void Session::RegisterSend()
 		int errorCode = WSAGetLastError();
 		if (errorCode != WSA_IO_PENDING)
 		{
-			assert(nullptr);
+			m_sendEvent.SetOwner(nullptr);
+			//assert(nullptr);
 		}
 	}
 }

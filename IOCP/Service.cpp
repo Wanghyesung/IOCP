@@ -7,10 +7,11 @@
 #include "Listener.h"
 
 
-Service::Service(eServiceType _eType, NetAddress _addr, shared_ptr<IOCP> _pIOCP, UINT _iMaxSessionCount) :
+Service::Service(eServiceType _eType, NetAddress _addr, shared_ptr<IOCP> _pIOCP, function<shared_ptr<Session>(void)> _pCreateSessionFunc, UINT _iMaxSessionCount) :
 	m_etype(_eType),
 	m_Address(_addr),
 	m_pIOCP(_pIOCP),
+	m_FuncCreateSession(_pCreateSessionFunc),
 	m_iMaxSessionCount(_iMaxSessionCount)
 {
 	
@@ -23,7 +24,10 @@ Service::~Service()
 
 shared_ptr<Session> Service::CreateSession()
 {
-	shared_ptr<Session> pSession = make_shared<Session>();
+	if (m_FuncCreateSession == nullptr)
+		assert(nullptr);
+
+	shared_ptr<Session> pSession = m_FuncCreateSession();
 	pSession->SetService(shared_from_this());
 
 	//iocpµî·Ï
@@ -32,10 +36,17 @@ shared_ptr<Session> Service::CreateSession()
 	return pSession;
 }
 
+void Service::BroadCast(BYTE* _bytes)
+{
+	for (auto& session : m_setSession)
+	{
+		session->Send(_bytes, sizeof(_bytes));
+	}
+}
 
 
-ServerService::ServerService(NetAddress _addr, shared_ptr<IOCP> _pIOCP, UINT _iMaxSessionCount):
-	Service(eServiceType::Server,_addr, _pIOCP,_iMaxSessionCount)
+ServerService::ServerService(NetAddress _addr, shared_ptr<IOCP> _pIOCP, function<shared_ptr<Session>(void)> _pCreateSessionFunc, UINT _iMaxSessionCount):
+	Service(eServiceType::Server,_addr, _pIOCP, _pCreateSessionFunc, _iMaxSessionCount)
 {
 
 }
@@ -45,22 +56,25 @@ ServerService::~ServerService()
 
 }
 
+
+
 void ServerService::Start()
 {
 	if (SockHelper::Start())
 		assert(nullptr);
 
-		
-	m_pLisener = new Listener();
-	m_pLisener->Start(this);
+	
+	m_pLisener = make_shared<Listener>();
+	m_pLisener->SetService(static_pointer_cast<ServerService>(shared_from_this()));
+	m_pLisener->Start();
 
 }
 
 
 
 
-ClientService::ClientService(NetAddress _addr, shared_ptr<IOCP> _pIOCP, UINT _iMaxSessionCount):
-	Service(eServiceType::Server, _addr, _pIOCP, _iMaxSessionCount)
+ClientService::ClientService(NetAddress _targetAddr, shared_ptr<IOCP> _pIOCP, function<shared_ptr<Session>(void)> _pCreateSessionFunc, UINT _iMaxSessionCount):
+	Service(eServiceType::Client, _targetAddr, _pIOCP, _pCreateSessionFunc, _iMaxSessionCount)
 {
 
 }
@@ -77,6 +91,8 @@ void ClientService::Start()
 		return;
 	}
 
+	SockHelper::Start();
+
 	int iCount = GetMaxSessionCount();
 
 	for (int i = 0; i < iCount; ++i)
@@ -84,4 +100,5 @@ void ClientService::Start()
 		shared_ptr<Session> pSession = CreateSession();
 		pSession->Connect();
 	}
+
 }

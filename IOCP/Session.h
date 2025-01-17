@@ -1,14 +1,10 @@
 #pragma once
 
 #include "NetAddress.h"
+#include "IOCPEvent.h"
 
 class IOCPEvent;
 class Service;
-
-class IOCPConnectEvent;
-class ICOPDisConnectEvent;
-class IOCPAcceptEvent;
-class IOCPRecvEvent;
 
 class Session : public enable_shared_from_this<Session>
 {
@@ -68,6 +64,6 @@ protected:
 	atomic<bool> m_bConnected;
 
 public:
-	unsigned char m_RecvBuffer[1024];
+	BYTE m_RecvBuffer[1024] = {};
 };
 

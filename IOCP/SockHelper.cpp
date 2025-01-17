@@ -21,13 +21,13 @@ void SockHelper::init()
 	Close(dummySocket);
 }
 
-bool SockHelper::BindWindowFunc(SOCKET _socket, GUID WSAID, LPVOID _pFunc)
+bool SockHelper::BindWindowFunc(SOCKET _socket, GUID WSAID, LPVOID* _pFunc)
 {
 	DWORD bytes = 0;
 
 	bool iResult = WSAIoctl(_socket, SIO_GET_EXTENSION_FUNCTION_POINTER,
 		&WSAID, sizeof(WSAID),
-		&_pFunc, sizeof(_pFunc),
+		_pFunc, sizeof(*_pFunc),
 		&bytes, NULL, NULL);
 
 	if (iResult == SOCKET_ERROR)
@@ -49,32 +49,36 @@ bool SockHelper::SetLinger(SOCKET _socket, int _iOnoff, int _iLinger)
 	option.l_linger = _iLinger;
 
 	//연결이 닫힐 때 데이터를 버퍼에서 전송할지, 또는 즉시 소켓을 닫을지를 결정
-	return setsockopt(_socket, SOL_SOCKET, SO_LINGER, reinterpret_cast<const char*>(&option), sizeof(LINGER));
+	return SOCKET_ERROR != setsockopt(_socket, SOL_SOCKET, SO_LINGER, reinterpret_cast<const char*>(&option), sizeof(LINGER));
 }
 
 bool SockHelper::SetReuseAddress(SOCKET _socket, bool _bFlag)
 {
-	return setsockopt(_socket, SOL_SOCKET, SO_REUSEADDR, reinterpret_cast<const char*>(&_bFlag) ,sizeof(bool));
+	return SOCKET_ERROR !=setsockopt(_socket, SOL_SOCKET, SO_REUSEADDR, reinterpret_cast<const char*>(&_bFlag) ,sizeof(bool));
 }
 
 bool SockHelper::SetRecvBufferSize(SOCKET _socket, int _iSize)
 {
-	return setsockopt(_socket, SOL_SOCKET, SO_RCVBUF, reinterpret_cast<const char*>(&_iSize), sizeof(int));
+	return SOCKET_ERROR !=setsockopt(_socket, SOL_SOCKET, SO_RCVBUF, reinterpret_cast<const char*>(&_iSize), sizeof(int));
 }
 
 bool SockHelper::SetSendBufferSize(SOCKET _socket, int _iSize)
 {
-	return setsockopt(_socket, SOL_SOCKET, SO_SNDBUF, reinterpret_cast<const char*>(&_iSize), sizeof(int));
+	return SOCKET_ERROR != setsockopt(_socket, SOL_SOCKET, SO_SNDBUF, reinterpret_cast<const char*>(&_iSize), sizeof(int));
 }
 
 bool SockHelper::SetTcpNoDelay(SOCKET _socket, bool _bFlag)
 {
-	return setsockopt(_socket, SOL_SOCKET, TCP_NODELAY, reinterpret_cast<const char*>(&_bFlag), sizeof(bool));
+	return SOCKET_ERROR != setsockopt(_socket, SOL_SOCKET, TCP_NODELAY, reinterpret_cast<const char*>(&_bFlag), sizeof(bool));
 }
 
 bool SockHelper::SetUpdateAcceptSocket(SOCKET _socket, SOCKET _listenSocket)
 {
-	return setsockopt(_socket, SOL_SOCKET, SO_UPDATE_ACCEPT_CONTEXT, reinterpret_cast<const char*>(&_listenSocket), sizeof(SOCKET));
+	/*
+	accept 함수가 반환한 소켓은 새 클라이언트와의 연결을 나타냅니다. 하지만 이 소켓은 기본적으로 어떤 리스닝 소켓과 연결되어 있는지 알지 못합니다.
+	SO_UPDATE_ACCEPT_CONTEXT를 설정하면 새로 생성된 소켓이 리스닝 소켓과의 컨텍스트를 상속받아 리스닝 소켓의 설정이나 동작을 이해할 수 있습니다.
+	*/
+	return SOCKET_ERROR != setsockopt(_socket, SOL_SOCKET, SO_UPDATE_ACCEPT_CONTEXT, reinterpret_cast<const char*>(&_listenSocket), sizeof(SOCKET));
 }
 
 bool SockHelper::Start()
@@ -98,7 +102,7 @@ bool SockHelper::Clear()
 
 bool SockHelper::Bind(SOCKET _socket, NetAddress addr)
 {
-	return  bind(_socket, reinterpret_cast<const SOCKADDR*>(&addr.GetAddr()), sizeof(SOCKADDR_IN)) != SOCKET_ERROR;
+	return ::bind(_socket, reinterpret_cast<const SOCKADDR*>(&addr.GetAddr()), sizeof(SOCKADDR_IN)) != SOCKET_ERROR;
 }
 
 bool SockHelper::BindAny(SOCKET _socket, UINT _iPort)
@@ -108,7 +112,7 @@ bool SockHelper::BindAny(SOCKET _socket, UINT _iPort)
 	sockAddr.sin_port = htons(_iPort);
 	sockAddr.sin_addr.s_addr = htonl(INADDR_ANY);
 
-	return bind(_socket, reinterpret_cast<const SOCKADDR*>(&sockAddr), sizeof(SOCKADDR_IN)) != SOCKET_ERROR;
+	return ::bind(_socket, reinterpret_cast<const SOCKADDR*>(&sockAddr), sizeof(SOCKADDR_IN)) != SOCKET_ERROR;
 }
 
 bool SockHelper::Listen(SOCKET _socket, int backlog)

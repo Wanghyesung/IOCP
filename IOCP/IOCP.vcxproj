@@ -156,6 +156,7 @@
     <ClInclude Include="Corepch.h" />
     <ClInclude Include="define.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="Global.h" />
     <ClInclude Include="IOCP.h" />
     <ClInclude Include="IOCPEvent.h" />
     <ClInclude Include="Listener.h" />
@@ -166,6 +167,7 @@
     <ClInclude Include="SockHelper.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Global.cpp" />
     <ClCompile Include="IOCP.cpp" />
     <ClCompile Include="IOCPEvent.cpp" />
     <ClCompile Include="Listener.cpp" />

@@ -41,7 +41,8 @@ void IOCP::Excute()
 			return;
 		else
 		{
-
+			shared_ptr<Session> pSession = iocpEvnet->GetOwner();
+			pSession->DisPatch(iocpEvnet, numOfBytes);
 		}
 	}
 }

@@ -67,4 +67,8 @@ class IOCPAcceptEvent : public IOCPEvent
 public:
 	IOCPAcceptEvent();
 	~IOCPAcceptEvent();
+
+public:
+	//나와 연결된 클라소켓
+	shared_ptr<Session> m_pSession = nullptr;
 };
