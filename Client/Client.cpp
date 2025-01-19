@@ -41,9 +41,9 @@ shared_ptr<ServerSession> MakeSharedSesion()
 int main()
 {
     SockHelper::init();
-
+    
     this_thread::sleep_for(1s);
-   
+    
     shared_ptr<ClientService> pClientService = make_shared<ClientService>(NetAddress(L"127.0.0.1", 7777),
         make_shared<IOCP>(), MakeSharedSesion, 1);
 

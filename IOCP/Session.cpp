@@ -5,6 +5,7 @@
 #include "Service.h"
 #include "IOCP.h"
 #include "NetAddress.h"
+
 Session::Session() :
 	m_bConnected(false)
 {

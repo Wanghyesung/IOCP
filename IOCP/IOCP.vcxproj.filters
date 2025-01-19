@@ -11,6 +11,9 @@
     <Filter Include="소스 파일\NetWork">
       <UniqueIdentifier>{ed88a6fa-a94b-4f3c-b50b-77f104ccb093}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Memory">
+      <UniqueIdentifier>{aa1c389d-09b0-4568-a10b-9d3c2e59b2d8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="container.h">
@@ -52,6 +55,12 @@
     <ClInclude Include="Global.h">
       <Filter>소스 파일\Common</Filter>
     </ClInclude>
+    <ClInclude Include="MemoryPool.h">
+      <Filter>소스 파일\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Memory.h">
+      <Filter>소스 파일\Memory</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -80,6 +89,12 @@
     </ClCompile>
     <ClCompile Include="Global.cpp">
       <Filter>소스 파일\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="MemoryPool.cpp">
+      <Filter>소스 파일\Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="Memory.cpp">
+      <Filter>소스 파일\Memory</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
