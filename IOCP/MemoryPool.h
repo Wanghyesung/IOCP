@@ -1,6 +1,27 @@
 #pragma once
 #include "Memory.h"
 
+class Knight
+{
+public:
+	Knight() :ll(0), hp(100), tl('t'), tem(4214)
+	{
+		int a = 10;
+	};
+	Knight(long long _ll, int _hp, char _t, int _tem) :
+		ll(_ll), hp(_hp), tl(_t), tem(_tem)
+	{
+		int a = 10;
+	}
+	~Knight() {}
+public:
+	long long ll;
+	int hp;
+	char tl;
+	int tem;
+};
+
+
 class MemoryHeader
 {
 	//내가 사용중인 메모리 크기 확인용
@@ -71,6 +92,34 @@ private:
 public:
 	template<typename T, typename... Args>
 	T* xnew(Args&&... args);
+
+	void Test()
+	{
+		BYTE* test = m_vecMemory[0]->m_Buffer;
+
+		// MemoryHeader를 건너뛰어 객체 데이터에 접근
+		BYTE* objectStart = test + sizeof(MemoryHeader);
+
+		// 객체 데이터를 수정
+		//void* knight = reinterpret_cast<void*>(objectStart);
+		
+		//knight = new string("GWNGHEfdnbFAKFJDBfu");
+
+		std::string* knight = reinterpret_cast<std::string*>(objectStart);
+
+		// 메모리 풀 내부 데이터를 새로운 문자열로 초기화
+		new (knight) std::string("GWNGHEfdnbFAKFJDBfu");
+
+
+		//knight = new string("GWNGHEfdnbFAKFJDBfu"); 가 메모리 풀 데이터를 수정하지 않는 이유 :
+		//
+		//이 코드는 새로운 문자열 객체를 동적으로 생성하고, knight 포인터가 이를 가리키게 합니다.
+		//	하지만, 이는 메모리 풀 내부 데이터를 덮어쓰는 것이 아니기 때문에, 메모리 풀의 원래 데이터는 그대로 유지됩니다.
+		//	올바른 데이터 덮어쓰기 방법 :
+		//
+		//reinterpret_cast를 사용하여 메모리 풀 내부 데이터를 적절한 타입으로 변환.
+		//	기존 데이터를 삭제(필요할 경우 소멸자 호출)한 후, Placement new를 사용해 새로운 데이터를 초기화.
+	}
 
 	template<typename T>
 	void xdelete(T* _ptr);

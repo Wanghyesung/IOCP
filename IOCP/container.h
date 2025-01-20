@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <queue>
+#include <stack>
 #include <map>
 #include <deque>
 #include <unordered_map>

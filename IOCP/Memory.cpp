@@ -10,8 +10,7 @@ Memory::Memory(size_t _size, BYTE* _buffer, size_t _count):
     {
 
         BYTE* DataPos = m_Buffer + (m_size * i);
-        uintptr_t* p = reinterpret_cast<uintptr_t*>(DataPos);
-     
+        //uintptr_t* p = reinterpret_cast<uintptr_t*>(DataPos);
         m_Memroy.push(DataPos);
     }
 }
@@ -39,6 +38,6 @@ MemoryHeader* Memory::Pop()
 void Memory::Push(void* _ptr)
 {
    //lock
-   BYTE* memory = reinterpret_cast<BYTE*>(_ptr);
+   BYTE* memory = static_cast<BYTE*>(_ptr);
     m_Memroy.push(memory);
 }
