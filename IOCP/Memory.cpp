@@ -25,7 +25,7 @@ MemoryHeader* Memory::Pop()
 {
     if (!m_Memroy.empty())
     {
-        BYTE* memory = m_Memroy.front();
+        BYTE* memory = m_Memroy.top();
         m_Memroy.pop();
 
         MemoryHeader* header = reinterpret_cast<MemoryHeader*>(memory);

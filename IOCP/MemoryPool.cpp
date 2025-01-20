@@ -76,21 +76,18 @@ MemoryPool::~MemoryPool()
 
 }
 
-MemoryHeader* MemoryPool::_xnew(size_t _size)
+MemoryHeader* MemoryPool::Pop(size_t _size)
 {
-	//if (_size > MAX_SIZE)
-	//{
-	//	return malloc(_size);
-	//}
-
 	int iAllocSize = _size;
 
 	return  m_vecMemory[iAllocSize]->Pop();
+
+	return nullptr;
 }
 
-void MemoryPool::_xdelete(void* _ptr)
+void MemoryPool::Push(void* _ptr)
 {
 	MemoryHeader* header = MemoryHeader::DetachHeader(_ptr);
-	
+
 	m_vecMemory[header->m_iSize]->Push(_ptr);
 }

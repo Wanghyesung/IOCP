@@ -26,7 +26,7 @@ Memory 클래스에서 메모리 블록을 std::queue로 관리하고 있습니다. 이는 LIFO(스택) 
 메모리 관리에 std::stack을 사용하는 것이 더 적합합니다.
 */
 
-	queue<BYTE*> m_Memroy;//받은 바이트를 내 사이즈만큼 나눠서 보관
+	stack<BYTE*> m_Memroy;//받은 바이트를 내 사이즈만큼 나눠서 보관
 	MemoryPool* m_pOwner;
 
 

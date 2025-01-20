@@ -6,8 +6,7 @@
 #include <IOCP.h>
 #include "SockHelper.h"
 #include "Listener.h"
-#include "MemoryPool.h"
-
+#include "Allocator.h"
 class ClientSession: public Session
 {
 public:
@@ -47,20 +46,13 @@ shared_ptr<ClientSession> MakeSharedListener()
 int main()
 {
     SockHelper::init();
-
-    Knight* Test = MemoryPoolMgr->xnew<Knight>();
     
-    MemoryPoolMgr->Test();
+    
+    shared_ptr<Knight> night2 = Allocator::MakeShared<Knight>();
 
-    /*Knight* tem = MemoryPoolMgr->xnew<Knight>();
-    Knight* tem1 = MemoryPoolMgr->xnew<Knight>(12421,24,'s',102);
-    tem->ll = 124124;
-    tem->hp = 4;
-    tem->tl = 't';
-    tem->tem = 124;*/
     shared_ptr<ServerService> pService = make_shared<ServerService>(NetAddress(L"127.0.0.1",7777), 
         make_shared<IOCP>(), MakeSharedListener , 1);
-    
+ 
     pService->Start();
     
     while (true)
