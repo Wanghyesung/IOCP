@@ -14,6 +14,9 @@
     <Filter Include="소스 파일\Memory">
       <UniqueIdentifier>{aa1c389d-09b0-4568-a10b-9d3c2e59b2d8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Thread">
+      <UniqueIdentifier>{08e68715-ac42-476d-a43f-640422c81dbc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="container.h">
@@ -62,6 +65,15 @@
       <Filter>소스 파일\Memory</Filter>
     </ClInclude>
     <ClInclude Include="Allocator.h" />
+    <ClInclude Include="ThreadManager.h">
+      <Filter>소스 파일\Thread</Filter>
+    </ClInclude>
+    <ClInclude Include="GThread.h">
+      <Filter>소스 파일\Thread</Filter>
+    </ClInclude>
+    <ClInclude Include="RWLock.h">
+      <Filter>소스 파일\Thread</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -99,6 +111,15 @@
     </ClCompile>
     <ClCompile Include="Allocator.cpp">
       <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="ThreadManager.cpp">
+      <Filter>소스 파일\Thread</Filter>
+    </ClCompile>
+    <ClCompile Include="GThread.cpp">
+      <Filter>소스 파일\Thread</Filter>
+    </ClCompile>
+    <ClCompile Include="RWLock.cpp">
+      <Filter>소스 파일\Thread</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

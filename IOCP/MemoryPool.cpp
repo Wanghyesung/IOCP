@@ -87,7 +87,7 @@ MemoryHeader* MemoryPool::Pop(size_t _size)
 
 void MemoryPool::Push(void* _ptr)
 {
-	MemoryHeader* header = MemoryHeader::DetachHeader(_ptr);
+	MemoryHeader* ptrHeader = MemoryHeader::DetachHeader(_ptr);
 
-	m_vecMemory[header->m_iSize]->Push(_ptr);
+	m_vecMemory[ptrHeader->m_iSize]->Push(ptrHeader);
 }
