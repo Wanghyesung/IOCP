@@ -64,7 +64,6 @@
     <ClInclude Include="Memory.h">
       <Filter>소스 파일\Memory</Filter>
     </ClInclude>
-    <ClInclude Include="Allocator.h" />
     <ClInclude Include="ThreadManager.h">
       <Filter>소스 파일\Thread</Filter>
     </ClInclude>
@@ -73,6 +72,15 @@
     </ClInclude>
     <ClInclude Include="RWLock.h">
       <Filter>소스 파일\Thread</Filter>
+    </ClInclude>
+    <ClInclude Include="RecvBuffer.h">
+      <Filter>소스 파일\NetWork</Filter>
+    </ClInclude>
+    <ClInclude Include="Allocator.h">
+      <Filter>소스 파일\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="StlAllocator.h">
+      <Filter>소스 파일\Memory</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -109,9 +117,6 @@
     <ClCompile Include="Memory.cpp">
       <Filter>소스 파일\Memory</Filter>
     </ClCompile>
-    <ClCompile Include="Allocator.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="ThreadManager.cpp">
       <Filter>소스 파일\Thread</Filter>
     </ClCompile>
@@ -120,6 +125,15 @@
     </ClCompile>
     <ClCompile Include="RWLock.cpp">
       <Filter>소스 파일\Thread</Filter>
+    </ClCompile>
+    <ClCompile Include="RecvBuffer.cpp">
+      <Filter>소스 파일\NetWork</Filter>
+    </ClCompile>
+    <ClCompile Include="Allocator.cpp">
+      <Filter>소스 파일\Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="StlAllocator.cpp">
+      <Filter>소스 파일\Memory</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

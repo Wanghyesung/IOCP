@@ -67,7 +67,7 @@ void Listener::RegisterAccept(IOCPAcceptEvent* _pAcceptEvent)
 
 	DWORD bytesRecved = 0;
 	
-	if (false == SockHelper::AcceptEx(m_socket, pSession->GetSocket(), pSession->m_RecvBuffer, 0,
+	if (false == SockHelper::AcceptEx(m_socket, pSession->GetSocket(), pSession->m_recvBuffer.GetWritePos(), 0,
 		sizeof(SOCKADDR_IN) + 16, sizeof(SOCKADDR_IN) + 16, &bytesRecved, reinterpret_cast<LPOVERLAPPED>(_pAcceptEvent)))
 	{
 		const int errorCode = WSAGetLastError();

@@ -7,7 +7,8 @@
 #include "NetAddress.h"
 
 Session::Session() :
-	m_bConnected(false)
+	m_bConnected(false),
+	m_recvBuffer(BUFFER_SIZE)
 {
 	m_socket = SockHelper::Create_Socket();
 }
@@ -178,7 +179,7 @@ void Session::RegisterRecv()
 
 	//추후 수정
 	WSABUF wsaBuf = {};
-	wsaBuf.buf = reinterpret_cast<char*>(m_RecvBuffer);//writePos 위치의 버퍼부터
+	wsaBuf.buf = reinterpret_cast<char*>(m_recvBuffer.GetWritePos());//writePos 위치의 버퍼부터
 	wsaBuf.len = 1024;
 
 	DWORD numOfBytes = 0;
@@ -206,7 +207,22 @@ void Session::ProcessRecv(int _iNumOfBytes)
 		return;
 	}
 
-	OnRecv(m_RecvBuffer, _iNumOfBytes);
+	if (m_recvBuffer.Write(_iNumOfBytes) == false)
+	{
+		DisConnect(L"RecvWrite Overflow");
+		return;
+	}
+
+	int proccessLen = OnRecv(m_recvBuffer.GetReadPos(), _iNumOfBytes);
+
+	if (proccessLen < 0 || proccessLen < m_recvBuffer.DataSize() ||
+		m_recvBuffer.Read(_iNumOfBytes) == false)
+	{
+		DisConnect(L"RecvRead Overflow");
+		return;
+	}
+
+	m_recvBuffer.Clear();
 
 	RegisterRecv();
 }

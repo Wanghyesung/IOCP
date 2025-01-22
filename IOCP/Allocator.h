@@ -2,15 +2,6 @@
 #include "MemoryPool.h"
 
 
-class Allocator
-{
-private:
-
-
-public:
-
-};
-
 template<typename T, typename ...Args>
 T* xnew(Args && ...args)
 {
@@ -25,7 +16,7 @@ T* xnew(Args && ...args)
 
 	T* memory = static_cast<T*>(MemoryHeader::AttachHeader(header, iTypeSize));
 	new(memory)T(std::forward<Args>(args)...);
-	return memory;	
+	return memory;
 }
 
 template<typename T>
@@ -40,4 +31,5 @@ shared_ptr<T> MakeShared(Args && ...args)
 {
 	return shared_ptr<T>(xnew<T>(std::forward<Args>(args)...), xdelete<T>);
 }
+
 

@@ -2,12 +2,21 @@
 
 #include "NetAddress.h"
 #include "IOCPEvent.h"
+#include "RecvBuffer.h"
 
 class IOCPEvent;
 class Service;
+class RecvBuffer;
+
+enum
+{
+	BUFFER_SIZE = 0x10000
+};
 
 class Session : public enable_shared_from_this<Session>
 {
+	friend class Listener;
+
 public:
 	Session();
 	~Session();
@@ -51,19 +60,18 @@ protected:
 	virtual void OnSend(int len) {}
 	virtual void OnDisConnected() {}
 
-protected:
+
+private:
 	SOCKET m_socket;
 	weak_ptr<Service> m_weakService;//순환 참조
 	NetAddress m_Address;
+	atomic<bool> m_bConnected;
 
 	IOCPConnectEvent m_ConnectEvent;
 	ICOPDisConnectEvent m_DisConnectEvent;
 	IOCPSendEvent m_sendEvent;
 	IOCPRecvEvent m_recvEvent;
-
-	atomic<bool> m_bConnected;
-
-public:
-	BYTE m_RecvBuffer[1024] = {};
+private:
+	RecvBuffer m_recvBuffer;
 };
 

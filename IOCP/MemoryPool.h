@@ -54,24 +54,24 @@ private:
 
 enum MemorySize
 {
-	DIV_SIZE_32 = 2048,
-	DIV_SIZE_64 = 1024,
-	DIV_SIZE_128 = 512,
-	DIV_SIZE_256 = 256,
-	DIV_SIZE_512 = 128,
-	DIV_SIZE_1024 = 64,
-	DIV_SIZE_2048 = 32,
+	COUNT_32	=  2048,
+	COUNT_64	=  1024,
+	COUNT_128	=  512,
+	COUNT_256	=  256,
+	COUNT_512	=  128,
+	COUNT_1024	=  64,
+	COUNT_2048	=  32,
 
 
 
 	//할당할 크기 , 해당 메모리 수
-	MAX_SIZE = 32   *   DIV_SIZE_32 + 
-			   64   *   DIV_SIZE_64 + 
-			   128  *   DIV_SIZE_128 + 
-			   256  *   DIV_SIZE_256 + 
-			   512  *   DIV_SIZE_512 + 
-			   1024 *   DIV_SIZE_1024 + 
-	           2048 *   DIV_SIZE_2048,
+	MAX_SIZE = 32   *   COUNT_32	+ 
+			   64   *   COUNT_64	+ 
+			   128  *   COUNT_128	+ 
+			   256  *   COUNT_256	+ 
+			   512  *   COUNT_512	+ 
+			   1024 *   COUNT_1024	+ 
+	           2048 *   COUNT_2048,
 };
 
 
