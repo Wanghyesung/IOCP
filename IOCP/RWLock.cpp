@@ -110,3 +110,29 @@ void RWLock::UnReadLock()
 		assert(nullptr);
 	}
 }
+
+
+//lock_guard
+WLock::WLock(RWLock& _pLock) :
+	m_RWLock(_pLock)
+{
+	m_RWLock.WriteLock();
+}
+
+//WriteLock
+WLock::~WLock()
+{
+	m_RWLock.UnWriteLock();
+}
+
+
+RLock::RLock(RWLock& _pLock) :
+	m_RWLock(_pLock)
+{
+	m_RWLock.ReadLock();
+}
+
+RLock::~RLock()
+{
+	m_RWLock.UnReadLock();
+}

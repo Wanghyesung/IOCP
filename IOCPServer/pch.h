@@ -9,3 +9,5 @@
 #endif
 
 #include "Corepch.h"
+
+#include "SendBuffer.h"

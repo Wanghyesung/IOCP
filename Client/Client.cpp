@@ -5,6 +5,8 @@
 #include "IOCP.h"
 #include "SockHelper.h"
 #include "Session.h"
+#include "ThreadManager.h"
+BYTE sendData[] = "hellow";
 
 class ServerSession : public Session
 {
@@ -14,10 +16,18 @@ public:
 
     virtual void OnConnected()
     {
-
+        shared_ptr<SendBuffer> sendBuffer = make_shared<SendBuffer>(4096);
+        sendBuffer->CopyData(sendData, sizeof(sendData));
+        Send(sendBuffer);
     }
     virtual int OnRecv(BYTE* buffer, int len) 
     {
+        cout << len <<endl;
+
+        shared_ptr<SendBuffer> sendBuffer = make_shared<SendBuffer>(4096);
+        sendBuffer->CopyData(buffer, sizeof(buffer));
+        Send(sendBuffer);
+
         return len;
     }
     virtual void OnSend(int len) 
@@ -45,20 +55,24 @@ int main()
     this_thread::sleep_for(1s);
     
     shared_ptr<ClientService> pClientService = make_shared<ClientService>(NetAddress(L"127.0.0.1", 7777),
-        make_shared<IOCP>(), MakeSharedSesion, 1);
+        make_shared<IOCP>(), MakeSharedSesion, 10);
 
     pClientService->Start();
 
-    while (true)
+    for (int i = 0; i < 5; ++i)
     {
-        this_thread::sleep_for(1s);
+        ThreadMgr->Excute([=]()
+            {
+                while (true)
+                {
+                    this_thread::sleep_for(1s);
 
-        pClientService->GetIOCP()->Excute();
-
-        BYTE SendBuffer[1024] = "Hellow";
-        pClientService->BroadCast(SendBuffer);
-
+                    pClientService->GetIOCP()->Excute();
+                }
+            }
+        );
     }
-
+   
+    ThreadMgr->Join();
 
 }

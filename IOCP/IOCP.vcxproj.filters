@@ -82,6 +82,9 @@
     <ClInclude Include="StlAllocator.h">
       <Filter>소스 파일\Memory</Filter>
     </ClInclude>
+    <ClInclude Include="SendBuffer.h">
+      <Filter>소스 파일\NetWork</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -134,6 +137,9 @@
     </ClCompile>
     <ClCompile Include="StlAllocator.cpp">
       <Filter>소스 파일\Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="SendBuffer.cpp">
+      <Filter>소스 파일\NetWork</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

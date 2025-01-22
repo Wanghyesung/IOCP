@@ -36,11 +36,11 @@ shared_ptr<Session> Service::CreateSession()
 	return pSession;
 }
 
-void Service::BroadCast(BYTE* _bytes)
+void Service::BroadCast(shared_ptr<SendBuffer> _pSendBuffer)
 {
 	for (auto& session : m_setSession)
 	{
-		session->Send(_bytes, sizeof(_bytes));
+		session->Send(_pSendBuffer);
 	}
 }
 

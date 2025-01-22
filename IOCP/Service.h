@@ -6,7 +6,7 @@
 class IOCP;
 class Session;
 class Listener;
-
+class SendBuffer;
 enum eServiceType
 {
 	Client,
@@ -34,7 +34,7 @@ public:
 	void EraseSession(shared_ptr<Session> _pSession) { m_setSession.erase(_pSession); }
 
 
-	void BroadCast(BYTE* _bytes);
+	void BroadCast(shared_ptr<SendBuffer> _pSendBuffer);
 private:
 	NetAddress m_Address;
 	shared_ptr<IOCP> m_pIOCP;

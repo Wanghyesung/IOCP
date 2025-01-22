@@ -25,8 +25,28 @@ public:
 
 
 private:
-	atomic<int> m_lockFlag;
+	std::atomic<int> m_lockFlag;
 	int m_iWriteCount; //Àç±Í Ä«¿îÆ®
 
+};
+
+class WLock
+{
+public:
+	WLock(RWLock& _pLock);
+	~WLock();
+
+private:
+	RWLock& m_RWLock;
+};
+
+class RLock
+{
+public:
+	RLock(RWLock& _pLock);
+	~RLock();
+
+private:
+	RWLock& m_RWLock;
 };
 

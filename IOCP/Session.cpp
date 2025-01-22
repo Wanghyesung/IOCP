@@ -8,7 +8,9 @@
 
 Session::Session() :
 	m_bConnected(false),
-	m_recvBuffer(BUFFER_SIZE)
+	m_atRegisterSend(false),
+	m_recvBuffer(BUFFER_SIZE),
+	m_lock{}
 {
 	m_socket = SockHelper::Create_Socket();
 }
@@ -60,11 +62,15 @@ void Session::Connect()
 	RegisterConnect();
 }
 
-void Session::Send(BYTE* _pBuffer, int _iLen)
+void Session::Send(shared_ptr<SendBuffer> _pBuffer)
 {
-	memcpy(m_sendEvent.m_sendBuffer, _pBuffer, _iLen);
+	WLock lockguard(m_lock);
+	
+	m_qSendBuffer.push(_pBuffer); //참조 , 복사 X
 
-	RegisterSend();
+	if (m_atRegisterSend.exchange(true) == false)
+		RegisterSend();
+	
 }
 
 void Session::RegisterConnect()
@@ -142,24 +148,54 @@ void Session::RegisterSend()
 	m_sendEvent.SetOwner(shared_from_this()); //나를 들고있게 해서 바로 해제하지 못하게 (원본 Event유지)
 	m_sendEvent.init();
 
-	WSABUF wsaBuf = {};
-	wsaBuf.buf = reinterpret_cast<char*>(m_sendEvent.m_sendBuffer);
-	wsaBuf.len = 1024;
+	WLock lockguard(m_lock);
+
+	int iWriteSize = 0;
+	while (!m_qSendBuffer.empty())//WSAbuffer에 버퍼가 사라지지 않기를 보장하기 위해서
+	{
+		shared_ptr<SendBuffer> pSendBuffer = m_qSendBuffer.front();
+		m_qSendBuffer.pop();
+
+		iWriteSize += pSendBuffer->GetWritePos();
+		m_sendEvent.m_vecSendBuffer.push_back(pSendBuffer);
+	}
+
+
+
+	//데이터를 뭉쳐서 한번에 보내기
+	vector<WSABUF> vecWsaBuf = {};
+	vecWsaBuf.reserve(m_sendEvent.m_vecSendBuffer.size());
+
+	for (int i = 0; i < m_sendEvent.m_vecSendBuffer.size(); ++i)
+	{
+		WSABUF wsaBuf = {};
+		wsaBuf.buf = reinterpret_cast<char*>(m_sendEvent.m_vecSendBuffer[i]->GetData());
+		wsaBuf.len = static_cast<DWORD>(m_sendEvent.m_vecSendBuffer[i]->GetWritePos());
+		vecWsaBuf.push_back(wsaBuf);
+	}
+
 
 	DWORD sendBytes = 0;
-	if (WSASend(m_socket, &wsaBuf, 1, &sendBytes, 0, &m_sendEvent, nullptr) != false)
+	if (WSASend(m_socket, vecWsaBuf.data(), static_cast<DWORD>(vecWsaBuf.size()), &sendBytes, 0, &m_sendEvent, nullptr) != false)
 	{
 		int errorCode = WSAGetLastError();
 		if (errorCode != WSA_IO_PENDING)
 		{
+			HandleError(errorCode);
+			//Release Ref 
 			m_sendEvent.SetOwner(nullptr);
-			//assert(nullptr);
+			m_sendEvent.m_vecSendBuffer.clear();
+			m_atRegisterSend.store(false);
 		}
 	}
 }
 
 void Session::ProcessSend(int _iNumOfBytes)
 {
+	m_sendEvent.m_vecSendBuffer.clear();
+	m_sendEvent.SetOwner(nullptr);
+
+
 	if (_iNumOfBytes == 0)
 	{
 		//연결이 끊김
@@ -167,9 +203,13 @@ void Session::ProcessSend(int _iNumOfBytes)
 		return;
 	}
 
-	m_sendEvent.SetOwner(nullptr);
-	
-	OnSend(_iNumOfBytes);	
+	OnSend(_iNumOfBytes);
+
+	//아직 데이터를 다 처리하지 못했다면
+	if (m_qSendBuffer.empty())
+		m_atRegisterSend.store(false);
+	else
+		RegisterSend();
 }
 
 void Session::RegisterRecv()
@@ -177,7 +217,6 @@ void Session::RegisterRecv()
 	m_recvEvent.init();
 	m_recvEvent.SetOwner(shared_from_this());
 
-	//추후 수정
 	WSABUF wsaBuf = {};
 	wsaBuf.buf = reinterpret_cast<char*>(m_recvBuffer.GetWritePos());//writePos 위치의 버퍼부터
 	wsaBuf.len = 1024;
@@ -190,8 +229,9 @@ void Session::RegisterRecv()
 		int errorCode = WSAGetLastError();
 		if (errorCode != WSA_IO_PENDING)
 		{
-			assert(nullptr);
-			//m_recvEvent.SetOwner(nullptr);
+			HandleError(errorCode);
+			m_recvEvent.SetOwner(nullptr);
+			//assert(nullptr);
 		}
 	}
 }
@@ -225,4 +265,19 @@ void Session::ProcessRecv(int _iNumOfBytes)
 	m_recvBuffer.Clear();
 
 	RegisterRecv();
+}
+
+void Session::HandleError(int iErrorCode)
+{
+	switch (iErrorCode)
+	{
+	case WSAECONNRESET:
+	case WSAECONNABORTED:
+		DisConnect(L"HandleError");
+		break;
+
+	default:
+		cout << "Handle Eerror : " << iErrorCode << endl;
+		break;
+	}
 }

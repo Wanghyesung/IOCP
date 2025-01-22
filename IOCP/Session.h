@@ -3,6 +3,7 @@
 #include "NetAddress.h"
 #include "IOCPEvent.h"
 #include "RecvBuffer.h"
+#include "SendBuffer.h"
 
 class IOCPEvent;
 class Service;
@@ -47,10 +48,11 @@ public:
 	virtual void RegisterRecv();
 	virtual void ProcessRecv(int _iNumOfBytes);
 
+	void HandleError(int iErrorCode);
 public:
 	void DisConnect(const WCHAR* _strCause);
 	void Connect();
-	void Send(BYTE* _pBuffer, int _iLen);
+	void Send(shared_ptr<SendBuffer> _pBuffer);
 	//void Recv();
 protected:
 	//만약 연결이 되었을 때 실행할 함수 
@@ -71,7 +73,18 @@ private:
 	ICOPDisConnectEvent m_DisConnectEvent;
 	IOCPSendEvent m_sendEvent;
 	IOCPRecvEvent m_recvEvent;
+
+
 private:
+	RWLock m_lock;
+
+
+	//IOCP는 동시에 두 개 이상의 Recv 작업을 같은 소켓에서 처리하지 않습니다.
 	RecvBuffer m_recvBuffer;
+
+	//같은 세션 객체(Session)에 대해 여러 스레드가 동시에 접근할 가능성이 있습니다
+	queue<shared_ptr<SendBuffer>> m_qSendBuffer;
+	atomic<bool> m_atRegisterSend;
+
 };
 

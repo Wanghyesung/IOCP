@@ -1,6 +1,7 @@
 #pragma once
 
 class Session;
+class SendBuffer;
 enum eIocpEvent
 {
 	Send,
@@ -37,7 +38,7 @@ public:
 	~IOCPSendEvent();
 
 public:
-	BYTE m_sendBuffer[1024];
+	vector<shared_ptr<SendBuffer>> m_vecSendBuffer;
 };
 
 

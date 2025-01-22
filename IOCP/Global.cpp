@@ -12,14 +12,15 @@ class Global
 public:
 	Global()
 	{
-		SockHelper::init();
-		MemoryPoolMgr = new MemoryPool();
 		ThreadMgr = new ThreadManager();
+		MemoryPoolMgr = new MemoryPool();
+		SockHelper::init();
 	}
 	~Global()
 	{
-		delete MemoryPoolMgr;
 		delete ThreadMgr;
+		delete MemoryPoolMgr;
+		SockHelper::Clear();
 	}
 
 }GGlobal;

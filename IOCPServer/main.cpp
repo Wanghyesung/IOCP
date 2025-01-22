@@ -9,6 +9,7 @@
 #include "Allocator.h"
 #include "RWLock.h"
 #include "ThreadManager.h"
+
 class ClientSession: public Session
 {
 public:
@@ -22,6 +23,11 @@ public:
     virtual int OnRecv(BYTE* buffer, int len)
     {
         cout << buffer << endl;
+
+        shared_ptr<SendBuffer> sendBuffer = make_shared<SendBuffer>(4096);
+        sendBuffer->CopyData(buffer, sizeof(buffer));
+        GetService()->BroadCast(sendBuffer);
+
         return len;
     }
     virtual void OnSend(int len)
@@ -53,12 +59,21 @@ int main()
         make_shared<IOCP>(), MakeSharedListener , 1);
  
     pService->Start();
-    
-    while (true)
+ 
+    for (int i = 0; i < 2; ++i)
     {
-        pService->GetIOCP()->Excute();
+        ThreadMgr->Excute([=]()
+            {
+                while (true)
+                {
+                    this_thread::sleep_for(1s);
 
-        this_thread::sleep_for(1s);
+                    pService->GetIOCP()->Excute();
+                }
+            }
+        );
     }
+
+    ThreadMgr->Join();
 }
 

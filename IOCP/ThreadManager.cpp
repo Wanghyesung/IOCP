@@ -2,21 +2,16 @@
 #include "ThreadManager.h"
 #include "GThread.h"
 
-void ThreadExcute(function<void(void)> _pFunc)
-{
-	ThreadManager::init();
-	_pFunc();
-	ThreadManager::clear();
-}
 
 ThreadManager::ThreadManager()
 {
-
+	//main thread
+	init();
 }
 
 ThreadManager::~ThreadManager()
 {
-
+	clear();
 }
 
 
@@ -24,8 +19,12 @@ void ThreadManager::Excute(function<void(void)> _pFunc)
 {
 	lock_guard<mutex> lock(m_mutex);
 
-	//std::move
-	m_vecThread.emplace_back(thread(ThreadExcute, _pFunc));
+	m_vecThread.push_back(thread([=]() {
+		init();
+		_pFunc();
+		clear();
+		}));
+
 }
 
 void ThreadManager::Join()
