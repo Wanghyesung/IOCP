@@ -7,6 +7,7 @@ class StlAllocator
 
 public:
 	StlAllocator() {};
+
 	template<typename Other>
 	StlAllocator(const StlAllocator<Other>&) {};
 
@@ -14,11 +15,15 @@ public:
 	T* allocate(size_t count)
 	{
 		const int iTypeSize = static_cast<int>(count * (sizeof(T)) + sizeof(MemoryHeader));
-		MemoryHeader* header = MemoryPoolMgr->Pop(iTypeSize);
-
-		if (iTypeSize > MemorySize::MAX_SIZE || header == nullptr)
+		MemoryHeader* header = nullptr;
+		
+		if (iTypeSize > MAX_POOLING_SIZE)
 		{
-			return new T();
+			header = reinterpret_cast<MemoryHeader*>(malloc(iTypeSize));	 
+		}
+		else
+		{
+			header = MemoryPoolMgr->Pop(iTypeSize);
 		}
 
 		T* memory = static_cast<T*>(MemoryHeader::AttachHeader(header, iTypeSize));

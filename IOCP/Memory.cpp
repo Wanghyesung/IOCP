@@ -32,7 +32,8 @@ MemoryHeader* Memory::Pop()
         return header;
     }
 
-    return nullptr;
+    //없다면 새로 할당
+    return reinterpret_cast<MemoryHeader*>(malloc(m_size));
 }
 
 void Memory::Push(MemoryHeader* _ptr)

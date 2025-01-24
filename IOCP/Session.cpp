@@ -149,18 +149,19 @@ void Session::RegisterSend()
 	m_sendEvent.SetOwner(shared_from_this()); //나를 들고있게 해서 바로 해제하지 못하게 (원본 Event유지)
 	m_sendEvent.init();
 
-	WLock lockguard(m_lock);
-
-	int iWriteSize = 0;
-	while (!m_qSendBuffer.empty())//WSAbuffer에 버퍼가 사라지지 않기를 보장하기 위해서
 	{
-		shared_ptr<SendBuffer> pSendBuffer = m_qSendBuffer.front();
-		m_qSendBuffer.pop();
+		WLock lockguard(m_lock);
 
-		iWriteSize += pSendBuffer->GetWritePos();
-		m_sendEvent.m_vecSendBuffer.push_back(pSendBuffer);
+		int iWriteSize = 0;
+		while (!m_qSendBuffer.empty())//WSAbuffer에 버퍼가 사라지지 않기를 보장하기 위해서
+		{
+			shared_ptr<SendBuffer> pSendBuffer = m_qSendBuffer.front();
+			m_qSendBuffer.pop();
+
+			iWriteSize += pSendBuffer->GetWritePos();
+			m_sendEvent.m_vecSendBuffer.push_back(pSendBuffer);
+		}
 	}
-
 
 
 	//데이터를 뭉쳐서 한번에 보내기

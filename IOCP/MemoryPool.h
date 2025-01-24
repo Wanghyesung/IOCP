@@ -1,6 +1,8 @@
 #pragma once
 #include "Memory.h"
 
+#define MAX_POOLING_SIZE 2048
+
 class Knight
 {
 public:
@@ -45,11 +47,8 @@ public:
 		return header;
 	}
 
-private:
+public:
 	int m_iSize;
-
-
-	friend class MemoryPool;
 };
 
 enum MemorySize
@@ -85,7 +84,7 @@ public:
 
 public:
 	MemoryHeader* Pop(size_t _size);
-	void Push(void* _ptr);
+	void Push(MemoryHeader* _ptr);
 
 private:
 	//비슷한 크기의 버퍼를 찾는 용도

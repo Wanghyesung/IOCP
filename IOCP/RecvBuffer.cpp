@@ -6,7 +6,7 @@ RecvBuffer::RecvBuffer(int _iBufferSize):
     m_iWritePos(0),
     m_iBufferSize(_iBufferSize)
 {
-    m_iCapacity = m_iBufferSize * 1.5;
+    m_iCapacity = m_iBufferSize * 1.2;
     m_vecRecvBuffer.resize(m_iCapacity);
 }
 

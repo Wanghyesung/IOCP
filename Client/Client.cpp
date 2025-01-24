@@ -29,8 +29,8 @@ public:
         cout << len <<endl;
 
         shared_ptr<SendBuffer> sendBuffer = SendBufferMgr->Open(4096);
-        memcpy(sendBuffer->GetData(), buffer, len);
-        sendBuffer->Close(len);
+        memcpy(sendBuffer->GetData(), buffer, sizeof(buffer));
+        sendBuffer->Close(sizeof(buffer));
         Send(sendBuffer);
 
         return len;

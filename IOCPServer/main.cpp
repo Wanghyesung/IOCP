@@ -27,8 +27,8 @@ public:
         cout << buffer << endl;
 
         shared_ptr<SendBuffer> sendBuffer = SendBufferMgr->Open(4096);
-        memcpy(sendBuffer->GetData(), buffer, len);
-        sendBuffer->Close(len);
+        memcpy(sendBuffer->GetData(), buffer, sizeof(buffer));
+        sendBuffer->Close(sizeof(buffer));
 
         GetService()->BroadCast(sendBuffer);
 
@@ -58,7 +58,7 @@ shared_ptr<ClientSession> MakeSharedListener()
 int main()
 {
     SockHelper::init();
- 
+
     shared_ptr<ServerService> pService = make_shared<ServerService>(NetAddress(L"127.0.0.1",7777), 
         make_shared<IOCP>(), MakeSharedListener , 10);
  
