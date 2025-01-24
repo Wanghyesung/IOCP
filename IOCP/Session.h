@@ -86,5 +86,9 @@ private:
 	queue<shared_ptr<SendBuffer>> m_qSendBuffer;
 	atomic<bool> m_atRegisterSend;
 
+	/*
+	16-3-2 순서로 전송했는데 3이 16바이트 중간에 끼어들어서 전송될 수는 없습니다. 다만 16+3 이렇게 19바이트가 한 번에 올 수는 있겠죠.
+	*/
+
 };
 

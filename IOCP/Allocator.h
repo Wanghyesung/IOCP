@@ -9,7 +9,7 @@ T* xnew(Args && ...args)
 	MemoryHeader* header = MemoryPoolMgr->Pop(iTypeSize);
 
 	//maxsize보다 크거나 메모리풀에 데이터가 없다면
-	if (iTypeSize > MemorySize::MAX_SIZE || header == nullptr)
+	if (iTypeSize > 2048 || header == nullptr)
 	{
 		return new T(std::forward<Args>(args)...);
 	}

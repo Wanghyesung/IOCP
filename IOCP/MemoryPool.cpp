@@ -79,6 +79,8 @@ MemoryPool::~MemoryPool()
 MemoryHeader* MemoryPool::Pop(size_t _size)
 {
 	int iAllocSize = _size;
+	if (iAllocSize > 2047)
+		return nullptr;
 
 	return  m_vecMemory[iAllocSize]->Pop();
 }

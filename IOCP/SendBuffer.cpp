@@ -1,11 +1,14 @@
 #include "pch.h"
 #include "SendBuffer.h"
+#include "SendBufferChunk.h"
 
-SendBuffer::SendBuffer(size_t _BufferSize):
+SendBuffer::SendBuffer(shared_ptr< SendBufferChunk> _pOwner, BYTE* _buffer,size_t _BufferSize):
 	m_iBufferSize(_BufferSize),
-	m_iWritePos(0)
+	m_iWritePos(0),
+	m_sendBuffer(_buffer),
+	m_pOwner(_pOwner)
 {
-	m_vecSendBuffer.resize(m_iBufferSize);
+
 }
 
 SendBuffer::~SendBuffer()
@@ -13,9 +16,9 @@ SendBuffer::~SendBuffer()
 
 }
 
-void SendBuffer::CopyData(BYTE* _data, int _iLen)
+void SendBuffer::Close(int _iLen)
 {
-	memcpy(&m_vecSendBuffer[m_iWritePos], _data, _iLen);
-
-	m_iWritePos += _iLen;
+	assert(_iLen <= m_iBufferSize);
+	m_iWritePos = _iLen;
+	m_pOwner->Close(_iLen);
 }

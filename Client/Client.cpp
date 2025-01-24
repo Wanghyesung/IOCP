@@ -6,6 +6,9 @@
 #include "SockHelper.h"
 #include "Session.h"
 #include "ThreadManager.h"
+#include "Global.h"
+#include "SendBufferChunk.h"
+
 BYTE sendData[] = "hellow";
 
 class ServerSession : public Session
@@ -16,16 +19,18 @@ public:
 
     virtual void OnConnected()
     {
-        shared_ptr<SendBuffer> sendBuffer = make_shared<SendBuffer>(4096);
-        sendBuffer->CopyData(sendData, sizeof(sendData));
+        shared_ptr<SendBuffer> sendBuffer = SendBufferMgr->Open(4096);
+        memcpy(sendBuffer->GetData(), sendData, sizeof(sendData));
+        sendBuffer->Close(sizeof(sendData));
         Send(sendBuffer);
     }
     virtual int OnRecv(BYTE* buffer, int len) 
     {
         cout << len <<endl;
 
-        shared_ptr<SendBuffer> sendBuffer = make_shared<SendBuffer>(4096);
-        sendBuffer->CopyData(buffer, sizeof(buffer));
+        shared_ptr<SendBuffer> sendBuffer = SendBufferMgr->Open(4096);
+        memcpy(sendBuffer->GetData(), buffer, len);
+        sendBuffer->Close(len);
         Send(sendBuffer);
 
         return len;

@@ -9,6 +9,8 @@
 #include "Allocator.h"
 #include "RWLock.h"
 #include "ThreadManager.h"
+#include "Global.h"
+#include "SendBufferChunk.h"
 
 class ClientSession: public Session
 {
@@ -24,8 +26,10 @@ public:
     {
         cout << buffer << endl;
 
-        shared_ptr<SendBuffer> sendBuffer = make_shared<SendBuffer>(4096);
-        sendBuffer->CopyData(buffer, sizeof(buffer));
+        shared_ptr<SendBuffer> sendBuffer = SendBufferMgr->Open(4096);
+        memcpy(sendBuffer->GetData(), buffer, len);
+        sendBuffer->Close(len);
+
         GetService()->BroadCast(sendBuffer);
 
         return len;
@@ -56,11 +60,11 @@ int main()
     SockHelper::init();
  
     shared_ptr<ServerService> pService = make_shared<ServerService>(NetAddress(L"127.0.0.1",7777), 
-        make_shared<IOCP>(), MakeSharedListener , 1);
+        make_shared<IOCP>(), MakeSharedListener , 10);
  
     pService->Start();
  
-    for (int i = 0; i < 2; ++i)
+    for (int i = 0; i < 5; ++i)
     {
         ThreadMgr->Excute([=]()
             {

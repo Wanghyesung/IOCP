@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "RWLock.h"
 #include "GThread.h"
-
 /*
 		ACQUIRE_TIMEOUT_TICK = 10000,
 		MAX_SPINE_COUNT = 5000,

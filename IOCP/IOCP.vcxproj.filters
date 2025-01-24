@@ -85,6 +85,9 @@
     <ClInclude Include="SendBuffer.h">
       <Filter>소스 파일\NetWork</Filter>
     </ClInclude>
+    <ClInclude Include="SendBufferChunk.h">
+      <Filter>소스 파일\NetWork</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -139,6 +142,9 @@
       <Filter>소스 파일\Memory</Filter>
     </ClCompile>
     <ClCompile Include="SendBuffer.cpp">
+      <Filter>소스 파일\NetWork</Filter>
+    </ClCompile>
+    <ClCompile Include="SendBufferChunk.cpp">
       <Filter>소스 파일\NetWork</Filter>
     </ClCompile>
   </ItemGroup>

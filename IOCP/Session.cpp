@@ -53,7 +53,8 @@ void Session::DisConnect(const WCHAR* _strCause)
 
 	wcout << _strCause;
 
-	GetService()->EraseSession(shared_from_this());
+	RegisterDisConnect();
+	//GetService()->EraseSession(shared_from_this());
 
 }
 
