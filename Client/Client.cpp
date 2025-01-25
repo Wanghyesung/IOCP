@@ -3,15 +3,16 @@
 #include "pch.h"
 #include "Service.h"
 #include "IOCP.h"
+#include "PacketSession.h"
 #include "SockHelper.h"
-#include "Session.h"
 #include "ThreadManager.h"
 #include "Global.h"
 #include "SendBufferChunk.h"
+#include "BufferReader.h"
 
 BYTE sendData[] = "hellow";
 
-class ServerSession : public Session
+class ServerSession : public PacketSession
 {
 public:
     ServerSession() {};
@@ -19,19 +20,21 @@ public:
 
     virtual void OnConnected()
     {
-        shared_ptr<SendBuffer> sendBuffer = SendBufferMgr->Open(4096);
-        memcpy(sendBuffer->GetData(), sendData, sizeof(sendData));
-        sendBuffer->Close(sizeof(sendData));
-        Send(sendBuffer);
+        
     }
-    virtual int OnRecv(BYTE* buffer, int len) 
+    virtual int OnRecvPacket(BYTE* buffer, int len) 
     {
         cout << len <<endl;
+        //대칭적으로
+       
+        BufferReader br(buffer, len);
+        PacketHeader header;
+        br >> header;
 
-        shared_ptr<SendBuffer> sendBuffer = SendBufferMgr->Open(4096);
-        memcpy(sendBuffer->GetData(), buffer, sizeof(buffer));
-        sendBuffer->Close(sizeof(buffer));
-        Send(sendBuffer);
+        int tem;
+        br >> tem;
+
+        cout << header.id << " " << header.size<<" "<<tem<<endl;
 
         return len;
     }

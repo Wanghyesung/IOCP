@@ -88,6 +88,15 @@
     <ClInclude Include="SendBufferChunk.h">
       <Filter>소스 파일\NetWork</Filter>
     </ClInclude>
+    <ClInclude Include="BufferReader.h">
+      <Filter>소스 파일\NetWork</Filter>
+    </ClInclude>
+    <ClInclude Include="BufferWriter.h">
+      <Filter>소스 파일\NetWork</Filter>
+    </ClInclude>
+    <ClInclude Include="PacketSession.h">
+      <Filter>소스 파일\NetWork</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -145,6 +154,15 @@
       <Filter>소스 파일\NetWork</Filter>
     </ClCompile>
     <ClCompile Include="SendBufferChunk.cpp">
+      <Filter>소스 파일\NetWork</Filter>
+    </ClCompile>
+    <ClCompile Include="BufferReader.cpp">
+      <Filter>소스 파일\NetWork</Filter>
+    </ClCompile>
+    <ClCompile Include="BufferWriter.cpp">
+      <Filter>소스 파일\NetWork</Filter>
+    </ClCompile>
+    <ClCompile Include="PacketSession.cpp">
       <Filter>소스 파일\NetWork</Filter>
     </ClCompile>
   </ItemGroup>
