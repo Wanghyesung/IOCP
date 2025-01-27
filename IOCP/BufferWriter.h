@@ -28,9 +28,9 @@ private:
 template<typename T>
 inline BufferWriter& BufferWriter::operator<<(T&& _src)
 {
-	using DataType = remove_reference_t<T>;
+	using DataType = std::remove_reference_t<T>;
 
-	*reinterpret_cast<T*>(&m_writeBuffer[m_iWritePos]) = std::forward<DataType>(_src);
+	*reinterpret_cast<DataType*>(&m_writeBuffer[m_iWritePos]) = std::forward<DataType>(_src);
 	m_iWritePos += sizeof(T);
 
 	return *this;

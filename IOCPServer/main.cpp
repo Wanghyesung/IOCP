@@ -13,6 +13,7 @@
 #include "Global.h"
 #include "SendBufferChunk.h"
 #include "BufferWriter.h"
+#include "ClientPacketHandler.h"
 
 class ClientSession: public PacketSession
 {
@@ -84,27 +85,15 @@ int main()
 
     while (true)
     {
-        shared_ptr<SendBuffer> SendBuffer = SendBufferMgr->Open(4096);
-        BYTE* Data = SendBuffer->GetData();
-
-
-        BufferWriter bw(Data, sizeof(PacketHeader) + sizeof(sendData));
-        PacketHeader* header = bw.Reserve<PacketHeader>(1); //패킷 헤더만큼 미리 할당받기
-        
-        bw << 1001;
-        header->id = 1;
-        header->size = bw.GetWritePos();
        
-
-        SendBuffer->Close(bw.GetWritePos());
-        pService->BroadCast(SendBuffer);
+        shared_ptr<SendBuffer> pSendBuffer = ClientPacketHandler::Make_Client_Test(L"hellow World", L"임시");
+        pService->BroadCast(pSendBuffer);
+        this_thread::sleep_for(1s);
 
         //(*reinterpret_cast<PacketHeader*>(Data)).id = 1;
         //(*reinterpret_cast<PacketHeader*>(Data)).size = sizeof(PacketHeader) + sizeof(sendData);
         //pService->BroadCast(SendBuffer);
         //SendBuffer->Close(sizeof(PacketHeader) + sizeof(sendData));
-
-        this_thread::sleep_for(1s);
     }
 
     ThreadMgr->Join();

@@ -9,6 +9,7 @@
 #include "Global.h"
 #include "SendBufferChunk.h"
 #include "BufferReader.h"
+#include "ServerPacketHandler.h"
 
 BYTE sendData[] = "hellow";
 
@@ -24,17 +25,10 @@ public:
     }
     virtual int OnRecvPacket(BYTE* buffer, int len) 
     {
-        cout << len <<endl;
+        //cout << len <<endl;
         //대칭적으로
        
-        BufferReader br(buffer, len);
-        PacketHeader header;
-        br >> header;
-
-        int tem;
-        br >> tem;
-
-        cout << header.id << " " << header.size<<" "<<tem<<endl;
+        ServerPacketHandler::HandlePacket(buffer, len);
 
         return len;
     }
