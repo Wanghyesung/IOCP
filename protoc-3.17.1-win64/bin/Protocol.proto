@@ -1,0 +1,9 @@
+syntax = "proto3";
+package Protocol;
+
+//repeated uint64 victims = 3;
+message S_TEST
+{
+	uint64 id = 1;
+	string text = 2;
+}

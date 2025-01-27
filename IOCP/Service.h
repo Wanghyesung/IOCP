@@ -1,6 +1,7 @@
 #pragma once
 
 #include "NetAddress.h"
+#include "RWLock.h"
 #include <functional>
 
 class IOCP;
@@ -30,8 +31,8 @@ public:
 	eServiceType GetServiceType() { return m_etype; }
 	shared_ptr<Service> GetServiceShared() { return shared_from_this(); }
 
-	void AddSession(shared_ptr<Session> _pSession) { m_setSession.insert(_pSession); }
-	void EraseSession(shared_ptr<Session> _pSession) { m_setSession.erase(_pSession); }
+	void AddSession(shared_ptr<Session> _pSession);
+	void EraseSession(shared_ptr<Session> _pSession);
 
 
 	void BroadCast(shared_ptr<SendBuffer> _pSendBuffer);
@@ -44,6 +45,8 @@ private:
 	function<shared_ptr<Session>(void)> m_FuncCreateSession;
 
 	UINT m_iMaxSessionCount;
+
+	RWLock m_Lock;
 };
 
 

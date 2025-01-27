@@ -36,6 +36,18 @@ shared_ptr<Session> Service::CreateSession()
 	return pSession;
 }
 
+void Service::AddSession(shared_ptr<Session> _pSession)
+{
+	WLock lock(m_Lock);
+	m_setSession.insert(_pSession);
+}
+
+void Service::EraseSession(shared_ptr<Session> _pSession)
+{
+	WLock lock(m_Lock);
+	m_setSession.erase(_pSession);
+}
+
 void Service::BroadCast(shared_ptr<SendBuffer> _pSendBuffer)
 {
 	for (auto& session : m_setSession)

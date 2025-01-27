@@ -2,6 +2,7 @@
 #include "ServerPacketHandler.h"
 #include "BufferReader.h"
 #include "PacketSession.h"
+#include "Protocol.pb.h"
 
 void ServerPacketHandler::HandlePacket(BYTE* _buffer, int _iLen)
 {
@@ -13,7 +14,7 @@ void ServerPacketHandler::HandlePacket(BYTE* _buffer, int _iLen)
 	switch (header.id)
 	{
 	case 1:
-		HandleServerTest(_buffer, _iLen);
+		Handle_S_TEST(_buffer, _iLen);
 		break;
 	default:
 		break;
@@ -48,4 +49,15 @@ void ServerPacketHandler::HandleServerTest(BYTE* _buffer, int _iLen)
 
 
 
+}
+
+void ServerPacketHandler::Handle_S_TEST(BYTE* _buffer, int _iLen)
+{
+	Protocol::S_TEST pkt;
+	//해당 데이터 파싱
+	pkt.ParseFromArray(_buffer + sizeof(PacketHeader), _iLen - sizeof(PacketHeader));
+
+	cout << "ID : " << pkt.id() << " TEXT : " << pkt.text()<<endl;
+
+	int a = 10;
 }

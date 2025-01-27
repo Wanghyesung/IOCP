@@ -2,9 +2,10 @@
 
 #ifdef _DEBUG
 #pragma comment(lib, "IOCP\\Debug\\IOCP.lib")
-
+#pragma comment(lib, "ProtoBuf\\Debug\\libprotobufd.lib")
 #else
 #pragma comment(lib, "IOCP\\Release\\IOCP.lib")
+#pragma comment(lib, "ProtoBuf\\Release\\libprotobuf.lib")
 
 #endif
 

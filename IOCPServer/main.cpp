@@ -14,6 +14,7 @@
 #include "SendBufferChunk.h"
 #include "BufferWriter.h"
 #include "ClientPacketHandler.h"
+#include "Protocol.pb.h"
 
 class ClientSession: public PacketSession
 {
@@ -85,8 +86,11 @@ int main()
 
     while (true)
     {
-       
-        shared_ptr<SendBuffer> pSendBuffer = ClientPacketHandler::Make_Client_Test(L"hellow World", L"임시");
+        Protocol::S_TEST pkt; //임시 객체
+        pkt.set_text("Hello World");
+        shared_ptr<SendBuffer> pSendBuffer = ClientPacketHandler::MakeSendBuffer(pkt);
+
+        //shared_ptr<SendBuffer> pSendBuffer = ClientPacketHandler::Make_Client_Test(L"hellow World", L"임시");
         pService->BroadCast(pSendBuffer);
         this_thread::sleep_for(1s);
 

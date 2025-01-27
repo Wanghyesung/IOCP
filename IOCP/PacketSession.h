@@ -25,6 +25,7 @@ struct PacketHeader
 	UINT16 id;
 };
 
+//가변 인자 시작
 struct VariableData
 {
 	UINT16 offsetPos;
