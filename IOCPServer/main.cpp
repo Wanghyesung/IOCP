@@ -15,6 +15,7 @@
 #include "BufferWriter.h"
 #include "ClientPacketHandler.h"
 #include "Protocol.pb.h"
+#include "MemoryPool.h"
 
 class ClientSession: public PacketSession
 {
@@ -62,6 +63,15 @@ shared_ptr<ClientSession> MakeSharedListener()
 wstring sendData = L"Hellow Word";
 int main()
 {
+    for (int i = 0; i < 2025; ++i)
+    {
+        Knight* tem = xnew<Knight>();
+        xdelete<Knight>(tem);
+    }
+
+   
+
+
     SockHelper::init();
 
     shared_ptr<ServerService> pService = make_shared<ServerService>(NetAddress(L"127.0.0.1",7777), 

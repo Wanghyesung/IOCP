@@ -164,11 +164,12 @@
     <ClInclude Include="IOCP.h" />
     <ClInclude Include="IOCPEvent.h" />
     <ClInclude Include="Listener.h" />
-    <ClInclude Include="Memory.h" />
+    <ClInclude Include="MemoryBlock.h" />
     <ClInclude Include="MemoryPool.h" />
     <ClInclude Include="NetAddress.h" />
     <ClInclude Include="PacketSession.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="PoolAllocator.h" />
     <ClInclude Include="RecvBuffer.h" />
     <ClInclude Include="SendBuffer.h" />
     <ClInclude Include="SendBufferChunk.h" />
@@ -176,7 +177,6 @@
     <ClInclude Include="Session.h" />
     <ClInclude Include="SockHelper.h" />
     <ClInclude Include="RWLock.h" />
-    <ClInclude Include="StlAllocator.h" />
     <ClInclude Include="ThreadManager.h" />
   </ItemGroup>
   <ItemGroup>
@@ -188,7 +188,7 @@
     <ClCompile Include="IOCP.cpp" />
     <ClCompile Include="IOCPEvent.cpp" />
     <ClCompile Include="Listener.cpp" />
-    <ClCompile Include="Memory.cpp" />
+    <ClCompile Include="MemoryBlock.cpp" />
     <ClCompile Include="MemoryPool.cpp" />
     <ClCompile Include="NetAddress.cpp" />
     <ClCompile Include="PacketSession.cpp" />
@@ -198,6 +198,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="PoolAllocator.cpp" />
     <ClCompile Include="RecvBuffer.cpp" />
     <ClCompile Include="SendBuffer.cpp" />
     <ClCompile Include="SendBufferChunk.cpp" />
@@ -205,7 +206,6 @@
     <ClCompile Include="Session.cpp" />
     <ClCompile Include="SockHelper.cpp" />
     <ClCompile Include="RWLock.cpp" />
-    <ClCompile Include="StlAllocator.cpp" />
     <ClCompile Include="ThreadManager.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

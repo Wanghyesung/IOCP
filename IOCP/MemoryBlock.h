@@ -1,11 +1,11 @@
 #pragma once
 
 
-class Memory
+class MemoryBlock
 {
 public:
-	Memory(size_t _size, BYTE* _buffer, size_t _count);
-	~Memory();
+	MemoryBlock(size_t _size, BYTE* _buffer, size_t _count);
+	~MemoryBlock();
 
 public:
 	class MemoryHeader* Pop();

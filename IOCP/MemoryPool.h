@@ -1,5 +1,5 @@
 #pragma once
-#include "Memory.h"
+class MemoryBlock;
 
 #define MAX_POOLING_SIZE 2048
 
@@ -88,7 +88,7 @@ public:
 
 private:
 	//비슷한 크기의 버퍼를 찾는 용도
-	vector<Memory*> m_vecMemory;
+	vector<MemoryBlock*> m_vecMemory;
 	BYTE m_Buffer[MAX_SIZE];
 };
 

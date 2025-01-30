@@ -1,7 +1,7 @@
 #include "pch.h"
-#include "Memory.h"
+#include "MemoryBlock.h"
 
-Memory::Memory(size_t _size, BYTE* _buffer, size_t _count):
+MemoryBlock::MemoryBlock(size_t _size, BYTE* _buffer, size_t _count):
     m_size(_size),
     m_Buffer(_buffer),
     m_memoryCount(_count)
@@ -15,13 +15,13 @@ Memory::Memory(size_t _size, BYTE* _buffer, size_t _count):
     }
 }
 
-Memory::~Memory()
+MemoryBlock::~MemoryBlock()
 {
 
 }
 
 //나중엔 멀티스레드 환경을 위해 lock을 걸기
-MemoryHeader* Memory::Pop()
+MemoryHeader* MemoryBlock::Pop()
 {
     if (!m_Memroy.empty())
     {
@@ -36,7 +36,7 @@ MemoryHeader* Memory::Pop()
     return reinterpret_cast<MemoryHeader*>(malloc(m_size));
 }
 
-void Memory::Push(MemoryHeader* _ptr)
+void MemoryBlock::Push(MemoryHeader* _ptr)
 {
    //lock
    BYTE* memory = reinterpret_cast<BYTE*>(_ptr);

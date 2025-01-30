@@ -61,7 +61,7 @@
     <ClInclude Include="MemoryPool.h">
       <Filter>소스 파일\Memory</Filter>
     </ClInclude>
-    <ClInclude Include="Memory.h">
+    <ClInclude Include="MemoryBlock.h">
       <Filter>소스 파일\Memory</Filter>
     </ClInclude>
     <ClInclude Include="ThreadManager.h">
@@ -79,9 +79,6 @@
     <ClInclude Include="Allocator.h">
       <Filter>소스 파일\Memory</Filter>
     </ClInclude>
-    <ClInclude Include="StlAllocator.h">
-      <Filter>소스 파일\Memory</Filter>
-    </ClInclude>
     <ClInclude Include="SendBuffer.h">
       <Filter>소스 파일\NetWork</Filter>
     </ClInclude>
@@ -96,6 +93,9 @@
     </ClInclude>
     <ClInclude Include="PacketSession.h">
       <Filter>소스 파일\NetWork</Filter>
+    </ClInclude>
+    <ClInclude Include="PoolAllocator.h">
+      <Filter>소스 파일\Memory</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -129,7 +129,7 @@
     <ClCompile Include="MemoryPool.cpp">
       <Filter>소스 파일\Memory</Filter>
     </ClCompile>
-    <ClCompile Include="Memory.cpp">
+    <ClCompile Include="MemoryBlock.cpp">
       <Filter>소스 파일\Memory</Filter>
     </ClCompile>
     <ClCompile Include="ThreadManager.cpp">
@@ -147,9 +147,6 @@
     <ClCompile Include="Allocator.cpp">
       <Filter>소스 파일\Memory</Filter>
     </ClCompile>
-    <ClCompile Include="StlAllocator.cpp">
-      <Filter>소스 파일\Memory</Filter>
-    </ClCompile>
     <ClCompile Include="SendBuffer.cpp">
       <Filter>소스 파일\NetWork</Filter>
     </ClCompile>
@@ -164,6 +161,9 @@
     </ClCompile>
     <ClCompile Include="PacketSession.cpp">
       <Filter>소스 파일\NetWork</Filter>
+    </ClCompile>
+    <ClCompile Include="PoolAllocator.cpp">
+      <Filter>소스 파일\Memory</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

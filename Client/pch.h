@@ -11,4 +11,6 @@
 
 #include "Corepch.h";
 
-#include "SendBuffer.h"
+
+#include "SendBufferChunk.h"
+#include "BufferReader.h"

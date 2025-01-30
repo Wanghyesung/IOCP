@@ -6,9 +6,7 @@
 #include "PacketSession.h"
 #include "SockHelper.h"
 #include "ThreadManager.h"
-#include "Global.h"
-#include "SendBufferChunk.h"
-#include "BufferReader.h"
+
 #include "ServerPacketHandler.h"
 
 BYTE sendData[] = "hellow";
